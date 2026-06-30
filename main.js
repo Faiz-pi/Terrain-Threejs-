@@ -41,8 +41,8 @@ scene.add(light);
 // MAIN LEARNING AREA-------------------------
 
 const geometry = new THREE.PlaneGeometry(
-    50,
-    50,
+    100,
+    100,
     100,
     100
     
@@ -57,21 +57,34 @@ terrain.rotation.x = -Math.PI / 2;
 
 const positions = geometry.attributes.position;
 
+function createMountain(centreX, centreY, height, radius) {
+    const centre = new THREE.Vector2(centreX, centreY);
+    const point = new THREE.Vector2();
+    for (let i = 0; i < positions.count; i++) {
+        const x = positions.getX(i);
+        const y = positions.getY(i);
+        point.set(x, y);
+        const distance = point.distanceTo(centre);
+        if (distance > radius) continue;
+        const hei = Math.max(0, height * (1 - distance / radius));
+        const currentHeight = positions.getZ(i);
+        positions.setZ(i, Math.max(currentHeight, hei));
+    }
+    
+}
+createMountain(5, 10, 12, 8);
+createMountain(-15, 4, 7, 5);
+createMountain(18, -12, 20, 15);
+positions.needsUpdate = true;
+geometry.computeVertexNormals();
+
 // MAIN LEARNING AREA-------------------------
 const clock = new THREE.Clock();
+
 function animate() {
     requestAnimationFrame(animate);
     controls.update();
     const time = clock.getElapsedTime();
-    for (let i = 0; i < positions.count; i++) {
-        const x = positions.getX(i);
-        const y = positions.getY(i);
-        //const height = Math.sin(x + time) + Math.cos(y + time);
-        const height = Math.random() * 5;
-        positions.setZ(i, height);
-    }
-    positions.needsUpdate = true;
-    geometry.computeVertexNormals();
     renderer.render(scene, camera);
 }
 
