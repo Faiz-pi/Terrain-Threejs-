@@ -66,15 +66,14 @@ function createMountain(centreX, centreY, height, radius) {
         point.set(x, y);
         const distance = point.distanceTo(centre);
         if (distance > radius) continue;
-        const hei = Math.max(0, height * (1 - distance / radius));
+        const hei = Math.max(0, height * (1- ((distance/radius) **10)));
         const currentHeight = positions.getZ(i);
         positions.setZ(i, Math.max(currentHeight, hei));
     }
     
 }
-createMountain(5, 10, 12, 8);
-createMountain(-15, 4, 7, 5);
-createMountain(18, -12, 20, 15);
+createMountain(0, 0, 20, 30); // Big mountain
+createMountain(2, 1, 3, 2);
 positions.needsUpdate = true;
 geometry.computeVertexNormals();
 
